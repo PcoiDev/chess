@@ -30,7 +30,7 @@ class Board:
     def move_piece(self, piece, new_coord: str) -> bool:
         # TODO: docstring
         if not coord_utils.is_coord(new_coord):
-            raise ValueError(f"{new_coord!r} is not a valid coordinate")
+            raise ValueError(constants.INVALID_COORD_ERROR.format(new_coord))
         
         column, row = coord_utils.coord_to_tuple(piece.position)
         
@@ -39,7 +39,7 @@ class Board:
         
         if new_coord_piece == "" or piece.is_enemy(new_coord_piece):
             piece.move(new_coord) # TODO: what to do with new_coord_piece cuz it will be eaten? destroy the piece?
-            
+
             self._board[column][row] = ""
             self._board[new_column][new_row] = piece
 

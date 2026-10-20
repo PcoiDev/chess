@@ -1,3 +1,6 @@
+import constants
+
+
 def is_coord(coord: str) -> bool:
     """Returns True if coord is a valid square on the board (like "e2"), False otherwise."""
     if len(coord) != 2:
@@ -14,7 +17,7 @@ def coord_to_tuple(coord: str) -> tuple[str, int]:
     coord = coord.lower()
 
     if not is_coord(coord):
-        raise ValueError(f"{coord!r} is not a valid coordinate")
+        raise ValueError(constants.INVALID_COORD_ERROR.format(coord))
 
     return coord[0], int(coord[1])
 
@@ -23,6 +26,6 @@ def tuple_to_coord(square: tuple[str, int]) -> str:
     coord = square[0] + str(square[1])
 
     if not is_coord(coord):
-        raise ValueError(f"{coord!r} is not a valid coordinate")
+        raise ValueError(constants.INVALID_COORD_ERROR.format(coord))
 
     return coord

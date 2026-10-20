@@ -11,10 +11,10 @@ class Piece:
 
     def __init__(self, color: str, position: str):
         if color not in COLORS:
-            raise ValueError(f"{color!r} is not a valid color")
+            raise ValueError(constants.INVALID_COLOR_ERROR.format(color))
 
         if not coord_utils.is_coord(position):
-            raise ValueError(f"{position!r} is not a valid coordinate")
+            raise ValueError(constants.INVALID_COORD_ERROR.format(position))
 
         self.color = color
         self.position = position
@@ -34,7 +34,7 @@ class Piece:
     def move(self, new_position: str):
         """Moves the piece without checking if the move is legal."""
         if not coord_utils.is_coord(new_position):
-            raise ValueError(f"{new_position!r} is not a valid coordinate")
+            raise ValueError(constants.INVALID_COORD_ERROR.format(new_position))
 
         self.position = new_position
         self.has_moved = True
