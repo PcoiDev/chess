@@ -8,8 +8,6 @@ class Board:
     def __init__(self):
         self._board = constants.EMPTY_BOARD
 
-    def __repr__(self):
-        raise NotImplementedError
 
     def add_piece(self, piece) -> bool:
         # TODO: docstring
