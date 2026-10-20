@@ -1,3 +1,5 @@
+import copy
+
 import constants
 import coord_utils
 
@@ -6,7 +8,7 @@ class Board:
     """Recreates the chess board onto the console"""
 
     def __init__(self):
-        self._board = constants.EMPTY_BOARD
+        self._board = copy.deepcopy(constants.EMPTY_BOARD)
 
 
     def add_piece(self, piece) -> bool:
