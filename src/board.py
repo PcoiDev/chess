@@ -2,6 +2,9 @@ import copy
 
 import constants
 import coord_utils
+from pieces import Bishop, King, Knight, Pawn, Queen, Rook
+
+BACK_ROW = (Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook)
 
 
 class Board:
@@ -9,6 +12,17 @@ class Board:
 
     def __init__(self):
         self._board = copy.deepcopy(constants.EMPTY_BOARD)
+
+    def setup(self) -> None:
+        """Empties the board and places the 32 pieces at their starting position."""
+        self._board = copy.deepcopy(constants.EMPTY_BOARD)
+
+        for color, back_row, pawn_row in (("white", 1, 2), ("black", 8, 7)):
+            for i, piece_class in enumerate(BACK_ROW):
+                column = chr(ord("a") + i)
+
+                self.add_piece(piece_class(color, coord_utils.tuple_to_coord((column, back_row))))
+                self.add_piece(Pawn(color, coord_utils.tuple_to_coord((column, pawn_row))))
 
     def get_square(self, coord: str):
         """Returns what is on the square coord: a piece, or "" if the square is empty."""
