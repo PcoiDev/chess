@@ -10,6 +10,10 @@ class Board:
     def __init__(self):
         self._board = copy.deepcopy(constants.EMPTY_BOARD)
 
+    def get_square(self, coord: str):
+        """Returns what is on the square coord: a piece, or "" if the square is empty."""
+        column, row = coord_utils.coord_to_tuple(coord)
+        return self._board[column][row]
 
     def add_piece(self, piece) -> bool:
         # TODO: docstring
