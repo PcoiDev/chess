@@ -1,28 +1,40 @@
 import constants
 import coord_utils
 from board import Board
+from pieces import COLORS
 
 COLUMNS = [chr(ord("a") + i) for i in range(8)]
 
 
-def render_board(board: Board) -> None:
-    """Prints the board in the console, from row 8 at the top to row 1 at the bottom."""
-    render_board_with_hints(board)
+def render_board(board: Board, side: str = "white") -> None:
+    """Prints the board in the console, seen from the side of the player (white or black)."""
+    render_board_with_hints(board, side=side)
 
 
-def render_board_with_hints(board: Board, coords: list[str] | None = None) -> None:
+def render_board_with_hints(board: Board, coords: list[str] | None = None, side: str = "white") -> None:
     """Prints the board like render_board, and marks the squares in coords (like the possible moves of a piece)."""
+    if side not in COLORS:
+        raise ValueError(constants.INVALID_COLOR_ERROR.format(side))
+
     if coords is None:
         coords = []
 
-    letters = "  " + "".join(f" {column} " for column in COLUMNS)
+    # White sees row 8 at the top and column a on the left, black sees the opposite.
+    if side == "white":
+        rows = range(8, 0, -1)
+        columns = COLUMNS
+    else:
+        rows = range(1, 9)
+        columns = COLUMNS[::-1]
+
+    letters = "  " + "".join(f" {column} " for column in columns)
 
     print(letters)
 
-    for row in range(8, 0, -1):
+    for row in rows:
         line = f"{row} "
 
-        for column in COLUMNS:
+        for column in columns:
             coord = coord_utils.tuple_to_coord((column, row))
             line += render_square(board.get_square(coord), coord in coords)
 
