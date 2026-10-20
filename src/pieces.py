@@ -48,26 +48,26 @@ class Piece:
         raise NotImplementedError
 
 
-class King("Piece"):
+class King(Piece):
     NAME = "KING"
 
 
-class Queen("Piece"):
+class Queen(Piece):
     NAME = "QUEEN"
 
 
-class Rook("Piece"):
+class Rook(Piece):
     NAME = "ROOK"
 
 
-class Bishop("Piece"):
+class Bishop(Piece):
     NAME = "BISHOP"
 
 
-class Knight("Piece"):
+class Knight(Piece):
     NAME = "KNIGHT"
 
 
-class Pawn("Piece"):
+class Pawn(Piece):
     NAME = "PAWN"
 
