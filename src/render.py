@@ -6,6 +6,11 @@ from pieces import COLORS
 COLUMNS = [chr(ord("a") + i) for i in range(8)]
 
 
+def clear_terminal() -> None:
+    """Clears the terminal so the board is always drawn at the top."""
+    print(constants.CLEAR_SCREEN, end="")
+
+
 def render_board(board: Board, side: str = "white") -> None:
     """Prints the board in the console, seen from the side of the player (white or black)."""
     render_board_with_hints(board, side=side)
