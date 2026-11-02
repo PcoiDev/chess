@@ -16,11 +16,11 @@ CAPTURE_HINT_SQUARE = "[{}]"
 
 CLEAR_SCREEN = "\033[2J\033[3J\033[H"
 
-CHOOSE_PIECE_PROMPT = "\nChoose a piece to play: "
+CHOOSE_PIECE_PROMPT = "Choose a piece to play: "
 CHOOSE_DESTINATION_PROMPT = "Where does it go? "
 QUIT_COMMAND = "quit"
 
-TURN_MESSAGE = "{} to play"
+TURN_MESSAGE = "\n{} to play"
 TOUCH_MOVE_MESSAGE ="Piece touched, piece played! You touched your {} on {!r}, no going back now."
 
 INVALID_COORD_ERROR = "{!r} is not a valid coordinate"
