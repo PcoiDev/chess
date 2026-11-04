@@ -23,8 +23,32 @@ def refresh(board: Board, turn: str, message: str = "", hints: list[str] | None 
     render_board_with_hints(board, hints, side=turn)
     print(constants.TURN_MESSAGE.format(turn.capitalize()))
 
+    if board.is_in_check(turn):
+        print(constants.CHECK_MESSAGE)
+
     if message:
         print(message)
+
+
+def other_color(color: str) -> str:
+    """Returns the color of the other player."""
+    return "black" if color == "white" else "white"
+
+
+def game_is_over(board: Board, turn: str) -> bool:
+    """Shows the result and returns True if the player can't move (checkmate or stalemate), returns False otherwise."""
+    if board.has_legal_moves(turn):
+        return False
+
+    clear_terminal()
+    render_board_with_hints(board, side=turn)
+
+    if board.is_in_check(turn):
+        print(constants.CHECKMATE_MESSAGE.format(other_color(turn).capitalize()))
+    else:
+        print(constants.STALEMATE_MESSAGE)
+
+    return True
 
 
 def ask_promotion(board: Board, pawn, turn: str) -> None:
@@ -42,7 +66,7 @@ def ask_promotion(board: Board, pawn, turn: str) -> None:
 
 
 def play() -> None:
-    """Runs a game: each player in turn chooses a piece, then where it goes, until they type quit."""
+    """Runs a game: each player in turn chooses a piece, then where it goes, until the game ends or they type quit."""
     board = Board()
     board.setup()
     turn = "white"
@@ -68,7 +92,7 @@ def play() -> None:
             message = constants.NOT_YOUR_PIECE_ERROR.format(type(piece).__name__.lower(), start, piece.color)
             continue
 
-        hints = piece.possible_moves(board)
+        hints = board.legal_moves(piece)
 
         if not hints:
             message = constants.NO_MOVES_ERROR.format(type(piece).__name__.lower(), start)
@@ -93,8 +117,11 @@ def play() -> None:
         if board.can_promote(piece):
             ask_promotion(board, piece, turn)
 
-        turn = "black" if turn == "white" else "white"
+        turn = other_color(turn)
         message = ""
+
+        if game_is_over(board, turn):
+            return
 
 
 def main() -> None:

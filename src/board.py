@@ -32,14 +32,44 @@ class Board:
         column, row = coord_utils.coord_to_tuple(coord)
         return self._board[column][row]
 
+    def get_pieces(self, color: str) -> list:
+        """Returns all the pieces of that color still on the board."""
+        return [
+            square
+            for column in self._board.values()
+            for square in column.values()
+            if square != "" and square.color == color
+        ]
+
     def is_attacked(self, coord: str, by_color: str) -> bool:
         """Returns True if a piece of by_color attacks the square coord, False otherwise."""
-        for column in self._board.values():
-            for square in column.values():
-                if square != "" and square.color == by_color and coord in square.attacked_squares(self):
-                    return True
+        return any(coord in piece.attacked_squares(self) for piece in self.get_pieces(by_color))
+
+    def is_in_check(self, color: str) -> bool:
+        """Returns True if the king of that color is attacked, False otherwise."""
+        for piece in self.get_pieces(color):
+            if isinstance(piece, King):
+                return self.is_attacked(piece.position, piece.enemy_color)
 
         return False
+
+    def legal_moves(self, piece) -> list[str]:
+        """Returns the possible moves of the piece that don't leave its own king in check."""
+        moves = []
+
+        for coord in piece.possible_moves(self):
+            # The move is tried on a copy of the board, so the real game doesn't change.
+            simulation = copy.deepcopy(self)
+            simulation.apply_move(simulation.get_square(piece.position), coord)
+
+            if not simulation.is_in_check(piece.color):
+                moves.append(coord)
+
+        return moves
+
+    def has_legal_moves(self, color: str) -> bool:
+        """Returns True if the player of that color can play at least one move, False otherwise."""
+        return any(self.legal_moves(piece) for piece in self.get_pieces(color))
 
     def add_piece(self, piece) -> bool:
         # TODO: docstring
@@ -57,13 +87,19 @@ class Board:
         self._board[column][row] = ""
 
     def move_piece(self, piece, new_coord: str) -> bool:
-        """Plays the move if it's one of the piece's possible moves, castling and en passant included. Returns False otherwise."""
+        """Plays the move if it's one of the piece's legal moves. Returns False otherwise."""
         if not coord_utils.is_coord(new_coord):
             raise ValueError(constants.INVALID_COORD_ERROR.format(new_coord))
 
-        if new_coord not in piece.possible_moves(self):
+        if new_coord not in self.legal_moves(piece):
             return False
 
+        self.apply_move(piece, new_coord)
+
+        return True
+
+    def apply_move(self, piece, new_coord: str) -> None:
+        """Plays the move without checking it, castling and en passant included."""
         column, row = coord_utils.coord_to_tuple(piece.position)
         new_column, new_row = coord_utils.coord_to_tuple(new_coord)
 
@@ -84,8 +120,6 @@ class Board:
         # Writing on the new square also removes the piece that was taken, if there is one.
         self._board[column][row] = ""
         self._board[new_column][new_row] = piece
-
-        return True
 
     def _move_castling_rook(self, king_column: str, row: int) -> None:
         """Moves the rook to the other side of the king, who is castling to king_column."""

@@ -27,6 +27,9 @@ QUIT_COMMAND = "quit"
 
 TURN_MESSAGE = "\n{} to play"
 TOUCH_MOVE_MESSAGE = "Piece touched, piece played! You touched your {} on {!r}, no going back now."
+CHECK_MESSAGE = "Check!"
+CHECKMATE_MESSAGE = "\nCheckmate! {} wins."
+STALEMATE_MESSAGE = "\nStalemate! Nobody can win, it's a draw."
 
 INVALID_COORD_ERROR = "{!r} is not a valid coordinate"
 INVALID_COLOR_ERROR = "{!r} is not a valid color"
