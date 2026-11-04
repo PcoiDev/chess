@@ -27,12 +27,18 @@ def refresh(board: Board, turn: str, message: str = "", hints: list[str] | None 
         print(message)
 
 
-def get_hints(board: Board, piece) -> list[str]:
-    """Returns the squares the piece can go to, or nothing while its possible_moves isn't written yet."""
-    try:
-        return piece.possible_moves(board)
-    except NotImplementedError:
-        return []
+def ask_promotion(board: Board, pawn, turn: str) -> None:
+    """Asks the player what their pawn becomes, until they give a valid answer."""
+    message = ""
+
+    while True:
+        refresh(board, turn, message)
+
+        try:
+            board.promote(pawn, ask(constants.PROMOTION_PROMPT))
+            return
+        except ValueError as error:
+            message = str(error)
 
 
 def play() -> None:
@@ -62,9 +68,14 @@ def play() -> None:
             message = constants.NOT_YOUR_PIECE_ERROR.format(type(piece).__name__.lower(), start, piece.color)
             continue
 
+        hints = piece.possible_moves(board)
+
+        if not hints:
+            message = constants.NO_MOVES_ERROR.format(type(piece).__name__.lower(), start)
+            continue
+
         # Touch-move rule: once a piece is chosen, the player can't choose another one.
         touched = constants.TOUCH_MOVE_MESSAGE.format(type(piece).__name__.lower(), start)
-        hints = get_hints(board, piece)
         message = touched
 
         while True:
@@ -78,6 +89,9 @@ def play() -> None:
                 message = touched + "\n" + constants.ILLEGAL_MOVE_ERROR.format(start, end)
             except ValueError as error:
                 message = touched + "\n" + str(error)
+
+        if board.can_promote(piece):
+            ask_promotion(board, piece, turn)
 
         turn = "black" if turn == "white" else "white"
         message = ""

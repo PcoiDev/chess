@@ -10,6 +10,10 @@ PIECES = {
 
 EMPTY_BOARD = {chr(ord("a") + i): {(i + 1): "" for i in range(8)} for i in range(8)}
 
+STRAIGHT_DIRECTIONS = ((1, 0), (-1, 0), (0, 1), (0, -1))
+DIAGONAL_DIRECTIONS = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+KNIGHT_JUMPS = ((1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2))
+
 EMPTY_SQUARE = " . "
 HINT_SQUARE = " • "
 CAPTURE_HINT_SQUARE = "[{}]"
@@ -18,13 +22,16 @@ CLEAR_SCREEN = "\033[2J\033[3J\033[H"
 
 CHOOSE_PIECE_PROMPT = "Choose a piece to play: "
 CHOOSE_DESTINATION_PROMPT = "Where does it go? "
+PROMOTION_PROMPT = "Your pawn made it! Promote it to a queen, rook, bishop or knight: "
 QUIT_COMMAND = "quit"
 
 TURN_MESSAGE = "\n{} to play"
-TOUCH_MOVE_MESSAGE ="Piece touched, piece played! You touched your {} on {!r}, no going back now."
+TOUCH_MOVE_MESSAGE = "Piece touched, piece played! You touched your {} on {!r}, no going back now."
 
 INVALID_COORD_ERROR = "{!r} is not a valid coordinate"
 INVALID_COLOR_ERROR = "{!r} is not a valid color"
 EMPTY_START_ERROR = "There is no piece on {!r}"
 NOT_YOUR_PIECE_ERROR = "Hands off! The {} on {!r} belongs to {}"
+NO_MOVES_ERROR = "The {} on {!r} can't move, choose another piece"
 ILLEGAL_MOVE_ERROR = "The piece on {!r} can't go to {!r}"
+INVALID_PROMOTION_ERROR = "{!r} is not a piece you can promote to"
